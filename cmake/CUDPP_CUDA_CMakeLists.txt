@@ -1,0 +1,72 @@
+cmake_minimum_required(VERSION 2.6.2)
+
+project(cmake_test)
+
+set(CMAKE_BUILD_TYPE Debug)
+
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake" ${CMAKE_MODULE_PATH})
+set(CMAKE_VERBOSE_MAKEFILE YES)
+#set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake/cuda" ${CMAKE_MODULE_PATH})
+
+message("")
+message("Configuration")
+message("-------------")
+
+set(CUDPP_ROOT_DIR "${CMAKE_SOURCE_DIR}/../cudpp/")
+#### Cuda 
+# find_package(CUDA)
+find_package(CUDA QUIET REQUIRED)
+# find_package(CUDA 2.1)
+# find_package(CUDA 2.2)
+# find_package(CUDA 2.3)
+# find_package(CUDA 2.1 REQUIRED)
+# find_package(CUDA 2.2 REQUIRED)
+# find_package(CUDA 2.3 REQUIRED)
+# find_package(CUDA 2.1 EXACT)
+# find_package(CUDA 2.2 EXACT)
+# find_package(CUDA 2.3 EXACT)
+# find_package(CUDA 2.1 EXACT REQUIRED)
+# find_package(CUDA 2.2 EXACT REQUIRED)
+# find_package(CUDA 2.3 EXACT REQUIRED)
+# find_package(CUDA 2.2 EXACT QUIET REQUIRED)
+find_package(CUDPP REQUIRED)
+
+if (CUDA_FOUND)
+    if (CUDPP_FOUND)
+	message(" * CUDA ${CUDA_VERSION} and CUDPP are found")
+    else(CUDPP_FOUND)
+	unset(CUDA_FOUND)
+	message(" * CUDA ${CUDA_VERSION}, is found, but CUDPP is missing")
+    endif(CUDPP_FOUND)
+else(CUDA_FOUND)
+	message(" * CUDA is not found")
+endif(CUDA_FOUND)
+
+if (NOT CUDA_FOUND)
+	message(FATAL_ERROR "Not all CUDA libraries are found")
+endif(NOT CUDA_FOUND)
+
+#### QT
+find_package(Qt4 REQUIRED)
+include(${QT_USE_FILE})
+include_directories(${QT_INCLUDES} ${CUDPP_INCLUDE_DIR} )
+
+#SET(CUDA_NVCC_FLAGS -O2 --use_fast_math )
+#SET(CMAKE_C_FLAGS_RELEASE "-O2 -funroll-loops -msse2 ")
+#SET(CMAKE_CXX_FLAGS_RELEASE "-O2 -funroll-loops -msse2 ")
+
+set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS_DEBUG} -Wall)
+
+message(" * CFLAGS   : ${${CFLAGS}}")
+message(" * CPPFLAGS : ${${CPPFLAGS}}")
+message(" * NVCCFLAGS: ${${CUDA_NVCC_FLAGS}}")
+message("\n")
+
+message(" * CUDPP_INCLUDE_DIR: ${${CUDPP_INCLUDE_DIR}}")
+set(SRCS
+	src/sort.cu
+)
+
+cuda_add_executable(cmake_test ${SRCS})
+target_link_libraries(cmake_test ${QT_LIBRARIES} ${CUDPP_LIBRARY})
+
