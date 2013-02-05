@@ -27,7 +27,7 @@ class Programmer : virtual public Person {
     public:
         Programmer(bool z):
             windows_user(z),
-            Person(false)
+            Person(false) // our programmer hates diamonds
             {
             }
         virtual void type() {
@@ -89,5 +89,5 @@ int main() {
 //  Programmer dislikes diamonds
 //  Pseudo Programmer likes diamonds
 //  PHP Programmer likes diamonds
-//  Programmer is a windows user likes diamonds
+//  Programmer is a windows user and likes diamonds
 //  Pseudo Programmer likes diamonds
