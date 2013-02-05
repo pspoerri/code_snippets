@@ -28,7 +28,7 @@ class Programmer : virtual public Person {
             Person(false)
             {
             }
-        void type() {
+        virtual void type() {
             cout << "Programmer ";
         }
 };
@@ -56,6 +56,9 @@ int main() {
 
     PseudoProgrammer psp;
     psp.status();
+
+    pr = psp;
+    pr.status();
 }
 
 
